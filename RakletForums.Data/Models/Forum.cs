@@ -13,5 +13,10 @@ namespace RakletForums.Data.Models
         public string ImageUrl { get; set; }
 
         public virtual IEnumerable<Post> Posts { get; set; }
+
+        //public object Posts()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
