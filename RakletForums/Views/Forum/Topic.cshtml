@@ -1,6 +1,13 @@
 ﻿@model RakletForums.Models.Forum.ForumTopicModel
 
 <h1>Welcome to the @Model.Forum.Name Forum!</h1>
+
+<span id="headingBtn">
+    <a asp-controller="Post" 
+        asp-action="Create" 
+        asp-route-id =@Model.Forum.Id class = "btn btn-newPost">Create Post</a>
+</span>
+
 @if (Model.Posts.Any())
 {
     <table class="table table-bordered table-hover">
@@ -9,7 +16,7 @@
             {
             <tr>
                 <td>
-                    <a asp-controller="Forum" asp-action="Index" asp-route-id="@post.Id">
+                    <a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">
                         @post.Title
                     </a>
                 </td>
