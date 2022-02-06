@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RakletForums.Data.Models;
 using RakletForums.Models;
 using RakletForums.Models.ManageViewModels;
 using RakletForums.Services;

@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1778
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakletForums", "RakletForums\RakletForums.csproj", "{2C3CE195-D25F-45F0-80AE-B987392CEC92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RakletForums", "RakletForums\RakletForums.csproj", "{2C3CE195-D25F-45F0-80AE-B987392CEC92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakletForums.Data", "RakletForums.Data\RakletForums.Data.csproj", "{51FB9A9D-A54F-4E0C-9E62-E49BE929915D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RakletForums.Data", "RakletForums.Data\RakletForums.Data.csproj", "{51FB9A9D-A54F-4E0C-9E62-E49BE929915D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakletForums.Service", "RakletForums.Service\RakletForums.Service.csproj", "{26D4A13E-CA10-4AC5-9065-93A422AA38CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{51FB9A9D-A54F-4E0C-9E62-E49BE929915D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51FB9A9D-A54F-4E0C-9E62-E49BE929915D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51FB9A9D-A54F-4E0C-9E62-E49BE929915D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26D4A13E-CA10-4AC5-9065-93A422AA38CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D4A13E-CA10-4AC5-9065-93A422AA38CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D4A13E-CA10-4AC5-9065-93A422AA38CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D4A13E-CA10-4AC5-9065-93A422AA38CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
