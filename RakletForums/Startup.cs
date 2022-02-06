@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RakletForums.Services;
 using RakletForums.Data;
 using RakletForums.Data.Models;
+using RakletForums.Service;
 
 namespace RakletForums
 {
@@ -31,6 +32,7 @@ namespace RakletForums
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IForum, ForumService>();
 
             services.AddMvc();
         }

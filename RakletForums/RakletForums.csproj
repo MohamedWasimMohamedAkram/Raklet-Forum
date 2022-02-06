@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <UserSecretsId>aspnet-RakletForums-9403EBB7-5AA0-4EAD-B566-49BCAE5639BB</UserSecretsId>
   </PropertyGroup>
 
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RakletForums.Data\RakletForums.Data.csproj" />
+    <ProjectReference Include="..\RakletForums.Service\RakletForums.Service.csproj" />
   </ItemGroup>
 
 </Project>
