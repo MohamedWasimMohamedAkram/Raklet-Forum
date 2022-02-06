@@ -17,39 +17,36 @@
         <h3 id="latestPosts">Latest Posts</h3>
         <table class="table table-hover" id="latestPostsTable">
             <tbody>
-                @foreach(var post in Model.LatestPosts)
+                @foreach (var post in Model.LatestPosts)
                 {
                     <tr>
                         <td>
-                            <div class="forumLogo" style="background-image: url(@post.Forum.ImageUrl); background-size: 100%"></div>
+                            <div class="forumLogo" style="background-image: url(@post.Forum.ImageUrl);"></div>
                             <div class="postTitle">
-                                <a asp-controller="Post" asp-action="Index" asp-route-index="@post.Id">
-                                    @post.Title;
+                                <a asp-controller="Post" asp-action="Index" asp-route-id="@post.Id">
+                                    @post.Title
                                 </a>
                             </div>
-
                             <div class="postSubTitle">
                                 @if (post.RepliesCount == 1)
                                 {
-                                    <span>@post.RepliesCount Reply</span>
+                                    <span>@post.RepliesCount reply</span>
                                 }
-
                                 @if (post.RepliesCount == 0)
                                 {
-                                    <span>No Replies</span>
+                                    <span>No replies</span>
                                 }
-
                                 else
                                 {
-                                    <span>@post.RepliesCount Replies</span>
+                                    <span>@post.RepliesCount replies</span>
                                 }
-                                <span class = "postUser">
-                                    <a asp-controller="Profile" asp-action="Detail" asp-route-index="@post.AuthorId">
+
+                                <span class="postUser">
+                                    <a asp-controller="Profile" asp-action="Detail" asp-route-id="@post.AuthorId">
                                         @post.AuthorName
                                     </a>
                                 </span>
                             </div>
-
                         </td>
                     </tr>
                 }

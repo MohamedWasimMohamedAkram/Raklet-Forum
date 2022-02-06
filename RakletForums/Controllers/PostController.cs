@@ -63,10 +63,14 @@ namespace RakletForums.Controllers
         public async Task<IActionResult> AddPost(NewPostModel model)
         {
             var userId = _userManager.GetUserId(User);
+            //var user = await _userManager.FindByIdAsync(userId); //There were issues when trying it with await infront.
             var user = _userManager.FindByIdAsync(userId).Result;
+
             var post = BuildPost(model, user);
 
-            _postService.Add(post).Wait();
+            await _postService.Add(post);
+            //_postService.Add(post).Wait(); //Block the current thread until the task is complete.
+            //TODO: Implement user rating management
 
             return RedirectToAction("Index", "Post", new { id = post.Id });
         }
