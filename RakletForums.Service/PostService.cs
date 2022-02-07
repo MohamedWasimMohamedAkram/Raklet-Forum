@@ -44,9 +44,9 @@ namespace RakletForums.Service
             return _context.Posts.Where(post => post.Id == id).Include(post => post.User).Include(post => post.Replies).ThenInclude(reply => reply.User).Include(post => post.Forum).First();
         }
 
-        public IEnumerable<Post> GetFilteredPosts(string searchQuery)
+        public IEnumerable<Post> GetFilteredPosts(Forum forum, string searchQuery)
         {
-            throw new NotImplementedException();
+            return string.IsNullOrEmpty(searchQuery) ? forum.Posts : forum.Posts.Where(post => post.Title.Contains(searchQuery) || post.Content.Contains(searchQuery));
         }
 
         public IEnumerable<Post> GetLatestPosts(int n)
