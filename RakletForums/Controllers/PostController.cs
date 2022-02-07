@@ -39,9 +39,17 @@ namespace RakletForums.Controllers
                 AuthorRating = post.User.Rating,
                 Created = post.Created,
                 PostContent = post.Content,
-                Replies = replies
+                Replies = replies,
+                ForumId = post.Forum.Id,
+                ForumName = post.Forum.Title,
+                IsAuthorAdmin = IsAuthorAdmin(post.User)
             };
             return View(model);
+        }
+
+        private bool IsAuthorAdmin(ApplicationUser user)
+        {
+            return _userManager.GetRolesAsync(user).Result.Contains("Admin");
         }
 
         public IActionResult Create(int id)
@@ -74,7 +82,6 @@ namespace RakletForums.Controllers
 
             return RedirectToAction("Index", "Post", new { id = post.Id });
         }
-
         private Post BuildPost(NewPostModel model, ApplicationUser user)
         {
             var forum = _forumService.GetById(model.ForumId);
@@ -98,7 +105,8 @@ namespace RakletForums.Controllers
                 AuthorImageUrl = reply.User.ProfileImageUrl,
                 AuthorRating = reply.User.Rating,
                 Created = reply.Created,
-                ReplyContent = reply.Content
+                ReplyContent = reply.Content,
+                IsAuthorAdmin = IsAuthorAdmin(reply.User)
             });
         }
     }
