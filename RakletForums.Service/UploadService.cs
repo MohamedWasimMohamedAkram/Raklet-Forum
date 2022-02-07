@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RakletForums.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace RakletForums.Service
 {
-    class UploadService
+    public class UploadService : IUpload
     {
     }
 }

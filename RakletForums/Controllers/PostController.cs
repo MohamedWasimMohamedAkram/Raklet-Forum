@@ -13,14 +13,15 @@ namespace RakletForums.Controllers
 {
     public class PostController : Controller
     {
-        private readonly IPost _postService;
+        //Creating a constructor, so we can use DEPENDENCY INJECTION to pass-in our services to our PostController.
+        private readonly IPost _postService; //private readonly field to store our PostService
         private readonly IForum _forumService;
 
         private static UserManager<ApplicationUser> _userManager;
 
         public PostController(IPost postService, IForum forumService, UserManager<ApplicationUser> userManager)
         {
-            _postService = postService;
+            _postService = postService; //Assign the private field in our constructor.
             _forumService = forumService;
             _userManager = userManager;
         }
@@ -29,12 +30,13 @@ namespace RakletForums.Controllers
         {
             var post = _postService.GetById(id);
             var replies = BuildPostReplies(post.Replies);
+
             var model = new PostIndexModel
             {
                 Id = post.Id,
                 Title = post.Title,
                 AuthorId = post.User.Id,
-                AuthorName  = post.User.UserName,
+                AuthorName = post.User.UserName,
                 AuthorImageUrl = post.User.ProfileImageUrl,
                 AuthorRating = post.User.Rating,
                 Created = post.Created,
@@ -44,15 +46,11 @@ namespace RakletForums.Controllers
                 ForumName = post.Forum.Title,
                 IsAuthorAdmin = IsAuthorAdmin(post.User)
             };
+
             return View(model);
         }
 
-        private bool IsAuthorAdmin(ApplicationUser user)
-        {
-            return _userManager.GetRolesAsync(user).Result.Contains("Admin");
-        }
-
-        public IActionResult Create(int id)
+        public IActionResult Create(int id) //id is Forum.Id
         {
             var forum = _forumService.GetById(id);
 
@@ -61,7 +59,7 @@ namespace RakletForums.Controllers
                 ForumName = forum.Title,
                 ForumId = forum.Id,
                 ForumImageUrl = forum.ImageUrl,
-                AuthorName = User.Identity.Name
+                AuthorName = User.Identity.Name //Get logged in user
             };
 
             return View(model);
@@ -82,9 +80,11 @@ namespace RakletForums.Controllers
 
             return RedirectToAction("Index", "Post", new { id = post.Id });
         }
+
         private Post BuildPost(NewPostModel model, ApplicationUser user)
         {
             var forum = _forumService.GetById(model.ForumId);
+
             return new Post
             {
                 Title = model.Title,
@@ -102,12 +102,18 @@ namespace RakletForums.Controllers
                 Id = reply.Id,
                 AuthorName = reply.User.UserName,
                 AuthorId = reply.User.Id,
-                AuthorImageUrl = reply.User.ProfileImageUrl,
                 AuthorRating = reply.User.Rating,
+                AuthorImageUrl = reply.User.ProfileImageUrl,
                 Created = reply.Created,
                 ReplyContent = reply.Content,
                 IsAuthorAdmin = IsAuthorAdmin(reply.User)
             });
+        }
+
+        private bool IsAuthorAdmin(ApplicationUser user)
+        {
+            return _userManager.GetRolesAsync(user)
+                .Result.Contains("Admin");
         }
     }
 }
