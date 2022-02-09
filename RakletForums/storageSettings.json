@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "AzureStorageAccount": "DefaultEndpointsProtocol=https;AccountName=rakletforums;AccountKey=oO6yhGhUysvw1orgomj/gM8Xz+HY6vSJxijukwUGyx1RnwSrZcN5NPBNsARY6nUESZ56CRA0RlbjP4kyiD6kiw==;EndpointSuffix=core.windows.net"
+  }
+}

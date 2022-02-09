@@ -16,14 +16,16 @@ namespace RakletForums.Controllers
         //Creating a constructor, so we can use DEPENDENCY INJECTION to pass-in our services to our PostController.
         private readonly IPost _postService; //private readonly field to store our PostService
         private readonly IForum _forumService;
+        private readonly IApplicationUser _userService;
 
         private static UserManager<ApplicationUser> _userManager;
 
-        public PostController(IPost postService, IForum forumService, UserManager<ApplicationUser> userManager)
+        public PostController(IPost postService, IForum forumService, UserManager<ApplicationUser> userManager, IApplicationUser userService)
         {
             _postService = postService; //Assign the private field in our constructor.
             _forumService = forumService;
             _userManager = userManager;
+            _userService = userService;
         }
 
         public IActionResult Index(int id)
@@ -75,8 +77,7 @@ namespace RakletForums.Controllers
             var post = BuildPost(model, user);
 
             await _postService.Add(post);
-            //_postService.Add(post).Wait(); //Block the current thread until the task is complete.
-            //TODO: Implement user rating management
+            await _userService.UpdateUserRating(userId, typeof(Post));
 
             return RedirectToAction("Index", "Post", new { id = post.Id });
         }

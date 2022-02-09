@@ -1,1 +1,52 @@
-﻿
+﻿@model RakletForums.Models.ApplicationUser.ProfileListModel
+<div class="container body-content">
+    <div class="row sectionHeader">
+        <div class="sectionHeading">Browse Users</div>
+    </div>
+    <div class="row" id="forumIndexContent">
+        <table class="table table-hover" id="userIndexTable">
+            <thead>
+                <tr>
+                    <th>
+                        Profile Pic
+                    </th>
+                    <th>
+                        Username
+                    </th>
+                    <th>
+                        Member Since
+                    </th>
+                    <th>
+                        E-mail
+                    </th>
+                    <th>
+                        User Rating
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var profile in Model.Profiles)
+                {
+                <tr class="userRow">
+                    <td>
+                        <div class="userProfilePic" style="background-image: url(@profile.ProfileImageUrl); background-size:100%"></div>
+                    </td>
+                    <td>
+                        @profile.UserName
+                    </td>
+                    <td>
+                        @profile.Email
+                    </td>
+                    <td>
+                        @profile.MemeberSince
+                    </td>
+                    <td>
+                        @profile.UserRating
+                    </td>
+
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

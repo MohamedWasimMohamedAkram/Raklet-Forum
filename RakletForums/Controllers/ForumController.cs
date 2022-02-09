@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.WindowsAzure.Storage.Blob;
 using RakletForums.Data;
 using RakletForums.Data.Models;
 using RakletForums.Models.Forum;
@@ -6,6 +9,8 @@ using RakletForums.Models.Post;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace RakletForums.Controllers
 {
@@ -13,11 +18,15 @@ namespace RakletForums.Controllers
     {
         private readonly IForum _forumService;
         private readonly IPost _postService;
+        private readonly IUpload _uploadService;
+        private readonly IConfiguration _configuration;
 
-        public ForumController(IForum forumService, IPost postService)
+        public ForumController(IForum forumService, IPost postService, IUpload uploadService, IConfiguration configuration)
         {
             _forumService = forumService;
             _postService = postService;
+            _uploadService = uploadService;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -25,12 +34,16 @@ namespace RakletForums.Controllers
             var forums = _forumService.GetAll().Select(forum => new ForumListingModel {
                 Id = forum.Id,
                 Name = forum.Title,
-                Description = forum.Description
+                Description = forum.Description,
+                NumberOfPosts = forum.Posts?.Count() ?? 0,
+                NumberOfUsers = _forumService.GetActiveUsers(forum.Id).Count(),
+                ImageUrl = forum.ImageUrl,
+                HasRecentPost = _forumService.HasRecentPost(forum.Id)
             });
 
             var model = new ForumIndexModel
             {
-                ForumList = forums
+                ForumList = forums.OrderBy(f => f.Name)
             };
 
             return View(model);
@@ -68,6 +81,46 @@ namespace RakletForums.Controllers
         public IActionResult Search(int id, string searchQuery)
         {
             return RedirectToAction("Topic", new { id, searchQuery });
+        }
+
+        public IActionResult Create()
+        {
+            var model = new AddForumModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddForum(AddForumModel model)
+        {
+            var imageUri = "/images/users/default.png";
+            if (model.ImageUpload != null)
+            {
+                var blockBlob = UploadForumImage(model.ImageUpload);
+                imageUri = blockBlob.Uri.AbsoluteUri;
+            }
+
+            var forum = new Forum
+            {
+                Title = model.Title,
+                Description = model.Description,
+                Created = DateTime.Now,
+                ImageUrl = imageUri
+            };
+
+            await _forumService.Create(forum);
+            return RedirectToAction("Index", "Forum");
+        }
+
+        private CloudBlockBlob UploadForumImage(IFormFile file)
+        {
+            var connectionString = _configuration.GetConnectionString("AzureStorageAccount");
+            var container = _uploadService.GetBlobContainer(connectionString);
+
+            var contentDisposition = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
+            var filename = contentDisposition.FileName.Trim('"');
+            var blockBlob = container.GetBlockBlobReference(filename);
+            blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+            return blockBlob;
         }
 
         private ForumListingModel BuildForumListing(Post post)

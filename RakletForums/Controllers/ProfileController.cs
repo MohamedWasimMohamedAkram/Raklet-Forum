@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using RakletForums.Data;
 using RakletForums.Data.Models;
 using RakletForums.Models.ApplicationUser;
+
 
 namespace RakletForums.Controllers
 {
@@ -16,12 +18,14 @@ namespace RakletForums.Controllers
         private readonly UserManager<ApplicationUser> _userManager; //Provided by Microsoft.AspNetCore.Identity
         private readonly IApplicationUser _userService;
         private readonly IUpload _uploadService; //To upload profile image to the cloud
+        private readonly IConfiguration _configuration;
 
-        public ProfileController(UserManager<ApplicationUser> userManager, IApplicationUser userService, IUpload uploadService)
+        public ProfileController(UserManager<ApplicationUser> userManager, IApplicationUser userService, IUpload uploadService, IConfiguration configuration)
         {
             this._userManager = userManager;
             this._userService = userService;
             this._uploadService = uploadService;
+            _configuration = configuration;
         }
 
         public IActionResult Detail(string id)
@@ -57,7 +61,7 @@ namespace RakletForums.Controllers
 
             var model = new ProfileListModel
             {
-                //Profiles = profiles
+                Profiles = profiles
             };
 
             return View(model);
@@ -67,20 +71,17 @@ namespace RakletForums.Controllers
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
             var userId = _userManager.GetUserId(User);
+            var connectionString = _configuration.GetConnectionString("AzureStorageAccount");
+            var container = _uploadService.GetBlobContainer(connectionString);
 
-            //Connect to Azure Storage Container
-            //Get Blob Container
+            var contentDisposition = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
+            var filename = contentDisposition.FileName.Trim('"');
+            var blockBlob = container.GetBlockBlobReference(filename);
 
-            //Parse the Content Disposition response header
-            //Grab the filename
+            await blockBlob.UploadFromStreamAsync(file.OpenReadStream());
+            await _userService.SetProfileImage(userId, blockBlob.Uri);
 
-            //Get a reference to a Block Blob
-            //On that block blob, upload our file
-
-            //Set the user's profile image to the received URI
-
-            //Redirect to user's profile page
-            return null;
+            return RedirectToAction("Detail", "Profile", new { id = userId });
         }
     }
 }
